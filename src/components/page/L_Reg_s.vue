@@ -11,17 +11,12 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item prop="num">
-                            <el-input v-model="userparam.username" placeholder="学号">
+                            <el-input v-model="userparam.snum" placeholder="学号">
                                 <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
                             </el-input>
                         </el-form-item>
-                        <el-form-item prop="username">
-                            <el-input v-model="userparam.t_num" placeholder="教师号">
-                                <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item prop="grade">
-                            <el-input v-model="userparam.grade" placeholder="年级">
+                        <el-form-item prop="num">
+                            <el-input v-model="userparam.tnum" placeholder="导师工号">
                                 <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
                             </el-input>
                         </el-form-item>
@@ -29,7 +24,7 @@
                             <el-input
                                     type="password"
                                     placeholder="密码"
-                                    v-model="userparam.password"
+                                    v-model="userparam.spwd"
                                     @keyup.enter.native="register()"
                             >
                                 <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
@@ -86,38 +81,38 @@
                 hideUpload: false,
                 form: {},
                 userparam: {//data
-                    sname:'',
-                    username: '',
-                    password: '',
-                    t_num:'',
+                    sname: '',
+                    snum: '',
+                    spwd: '',
+                    tnum:'',
 
                 },
                 rules: {//validation
-                    sname:[{required:true,message:'请输入姓名',trigger: 'blur'}],
-                    username: [{ required: true, message: '请输入学号', trigger: 'blur' }],
-                    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-                    t_num:[{required:true,message:'请输入姓名',trigger: 'blur'}],
+                    sname: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+                    snum: [{ required: true, message: '请输入学号', trigger: 'blur' }],
+                    spwd: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+                     tnum:[{required:true,message:'请输入导师工号',trigger: 'blur'}],
                 },
             };
         },
         methods: {
-            UploadUrl:function(){
+            UploadUrl: function() {
                 return "";
             },
-            handleonchange(files, fileList){
+            handleonchange(files, fileList) {
                 this.hideUpload = fileList.length >= this.limitNum;
             },
             // 上传文件之前的钩子
-            handleBeforeUpload(file){
+            handleBeforeUpload(file) {
                 console.log('before')
-                if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
+                if (!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
                     this.$notify.warning({
                         title: '警告',
                         message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
                     })
                 }
                 let size = file.size / 1024 / 1024 / 2
-                if(size > 2) {
+                if (size > 2) {
                     this.$notify.warning({
                         title: '警告',
                         message: '图片大小必须小于2M'
@@ -145,23 +140,56 @@
                 this.$refs.upload.submit()
 
             },
-            register(){
+            register() {
                 this.$refs.register.validate(valid => {
                     if (valid) {
-                        localStorage.setItem('sname',this.userparam.sname);
-                        localStorage.setItem('snum',this.userparam.username);
-                        localStorage.setItem('spwd',this.userparam.password);
-                        localStorage.setItem('t_num',this.userparam.t_num);
+                        const s_data = {
+                            sname: this.userparam.sname,
+                            snum: this.userparam.snum,
+                            tnum: this.userparam.tnum,
+                            spwd: this.userparam.spwd,
+                        };
+
+                        this.$axios.post('http://123.56.15.233:8000/register_s', s_data)
+                            .then((res) => {
+                                if (res.data.success === true) {
+                                    this.$message({
+                                        message: '注册成功!',
+                                        type: 'success',
+                                    });
+                                    this.$router.push({ path: '/' });
+                                } else {
+                                    this.$message({
+                                        message: res.data.error,
+                                        type: 'warning',
+                                    });
+                                    console.log(res.data.error);
+                                }
+
+                            })
+                            .catch((err) => {
+                                this.$message({
+                                    mesage: err,
+                                    type: 'warning',
+                                });
+                                console.log(err);
+                            });
+
                         this.$refs.upload.submit();
                         console.log('已经上传！！！！');
                         this.$message.success('注册成功');
-                        this.$router.push( '/');
-                    };
+                        this.$router.push('/');
+
+                    }
+                    ;
+
+
                 })
 
-            }
+
+            },
         },
-    };
+    }
 </script>
 
 <style >
@@ -169,14 +197,14 @@
         display: none;
     }
     .col{
-        margin-left: 30px;
+        margin-left: 50px;
     }
     .col1{
-        margin-left: 90px;
+        margin-left: 70px;
         margin-top: 10px;
     }
     .uploadp{
-        margin-top: 30px;
+        margin-top: 10px;
         margin-left: 60px;
 
     }
@@ -212,7 +240,7 @@
         text-align: center;
     }
     .login-btn button {
-        width: 100%;
+        width: 700px;
         height: 36px;
         margin-bottom: 10px;
     }
