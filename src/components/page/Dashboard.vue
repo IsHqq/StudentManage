@@ -6,8 +6,8 @@
                     <div class="user-info">
                         <img src="../../assets/img/img.jpg" class="user-avator" alt />
                         <div class="user-info-cont">
-                            <div class="user-info-name">{{name}}</div>
-                            <div>{{role}}</div>
+                            <div class="user-info-name">{{username}}</div>
+                            <div>教师</div>
                         </div>
                     </div>
                     <div class="user-info-list">
@@ -20,7 +20,7 @@
                     <div class="grid-content grid-con-1">
                         <i class="el-icon-lx-people grid-con-icon"></i>
                         <div class="grid-cont-right">
-                            <div class="grid-num">12</div>
+                            <div class="grid-num">{{studentNum}}</div>
                             <div>学生数量</div>
                         </div>
                     </div>
@@ -30,91 +30,21 @@
             </el-col>
             <el-col :span="15" class="right-bargin">
                 <div class="container">
-                    <el-tabs v-model="message">
-                        <el-tab-pane :label="`未读消息(${unread.length})`" name="first">
-                            <el-table :data="unread" :show-header="false" style="width: 100%">
-                                <el-table-column>
-                                    <template slot-scope="scope">
-                                        <span class="message-title">{{scope.row.title}}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="date" width="180"></el-table-column>
-                                <el-table-column width="120">
-                                    <template slot-scope="scope">
-                                        <el-button size="small" @click="handleRead(scope.$index)">标为已读</el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                            <div class="handle-row">
-                                <el-button type="primary">全部标为已读</el-button>
-                            </div>
-                        </el-tab-pane>
-                        <el-tab-pane :label="`已读消息(${read.length})`" name="second">
-                            <template v-if="message === 'second'">
-                                <el-table :data="read" :show-header="false" style="width: 100%">
-                                    <el-table-column>
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.title}}</span>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column prop="date" width="150"></el-table-column>
-                                    <el-table-column width="120">
-                                        <template slot-scope="scope">
-                                            <el-button type="danger" @click="handleDel(scope.$index)">删除</el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <div class="handle-row">
-                                    <el-button type="danger">删除全部</el-button>
-                                </div>
-                            </template>
-                        </el-tab-pane>
-                        <el-tab-pane :label="`回收站(${recycle.length})`" name="third">
-                            <template v-if="message === 'third'">
-                                <el-table :data="recycle" :show-header="false" style="width: 100%">
-                                    <el-table-column>
-                                        <template slot-scope="scope">
-                                            <span class="message-title">{{scope.row.title}}</span>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column prop="date" width="150"></el-table-column>
-                                    <el-table-column width="120">
-                                        <template slot-scope="scope">
-                                            <el-button @click="handleRestore(scope.$index)">还原</el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <div class="handle-row">
-                                    <el-button type="danger">清空回收站</el-button>
-                                </div>
-                            </template>
-                        </el-tab-pane>
-                    </el-tabs>
+                    <el-table
+                            :data="tableData1"
+                            class="studentTable"
+                    >
+                        <el-table-column v-for="items in tableDataType"
+                                         :prop="items.nameProp"
+                                         :label="items.nameLable"
+                                         width="300">
+                        </el-table-column>
+                    </el-table>
+
                 </div>
-               <!-- <el-card shadow="hover" style="height:252px;">
-                    <div slot="header" class="clearfix">
-                        <span>今日签到</span>
-                    </div>Vue
-                    <el-progress :percentage='7-30' color="#42b983"></el-progress>JavaScript
-                    <el-progress :percentage="7-30" color="#f1e05a"></el-progress>CSS
-                    <el-progress :percentage="7-30"></el-progress>HTML
-                    <el-progress :percentage="7-30" color="#f56c6c"></el-progress>
-                </el-card>-->
 
             </el-col>
         </el-row>
-       <!-- <el-row :gutter="20">
-            <el-col :span="12">
-                <el-card shadow="hover">
-                    <schart ref="bar" class="schart" canvasId="bar" :options="options"></schart>
-                </el-card>
-            </el-col>
-            <el-col :span="12">
-                <el-card shadow="hover">
-                    <schart ref="line" class="schart" canvasId="line" :options="options2"></schart>
-                </el-card>
-            </el-col>
-        </el-row>-->
     </div>
 </template>
 
@@ -126,116 +56,80 @@ export default {
     data() {
         return {
            // name: localStorage.getItem('ms_username'),
-            college: '计算机',
-            data: [
-                {
-                    name: '2018/09/04',
-                    value: 1083
-                },
-                {
-                    name: '2018/09/05',
-                    value: 941
-                },
-                {
-                    name: '2018/09/06',
-                    value: 1139
-                },
-                {
-                    name: '2018/09/07',
-                    value: 816
-                },
-                {
-                    name: '2018/09/08',
-                    value: 327
-                },
-                {
-                    name: '2018/09/09',
-                    value: 228
-                },
-                {
-                    name: '2018/09/10',
-                    value: 1065
-                }
-            ],
-            options: {
-                type: 'bar',
-                title: {
-                    text: '最近一周各品类销售图'
-                },
-                xRorate: 25,
-                labels: ['周一', '周二', '周三', '周四', '周五'],
-                datasets: [
-                    {
-                        label: '家电',
-                        data: [234, 278, 270, 190, 230]
-                    },
-                    {
-                        label: '百货',
-                        data: [164, 178, 190, 135, 160]
-                    },
-                    {
-                        label: '食品',
-                        data: [144, 198, 150, 235, 120]
-                    }
-                ]
-            },
-            options2: {
-                type: 'line',
-                title: {
-                    text: '最近几个月各品类销售趋势图'
-                },
-                labels: ['6月', '7月', '8月', '9月', '10月'],
-                datasets: [
-                    {
-                        label: '家电',
-                        data: [234, 278, 270, 190, 230]
-                    },
-                    {
-                        label: '百货',
-                        data: [164, 178, 150, 135, 160]
-                    },
-                    {
-                        label: '食品',
-                        data: [74, 118, 200, 235, 90]
-                    }
-                ]
-            },
-            message: 'first',
-            showHeader: false,
-            unread: [{
-                date: '2018-04-19 20:00:00',
-                title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护',
-            },{
-                date: '2018-04-19 21:00:00',
-                title: '今晚12点整发大红包，先到先得',
+
+
+           // message: 'first',
+           // showHeader: false,
+
+            tableDataType: [{
+                nameLable:'序号',
+                nameProp:'id'//要改
+            }, {
+                nameLable: '姓名',
+                nameProp: 'name'
+            }, {
+                nameLable:'今日签到' ,
+                nameProp:'check'
             }],
-            read: [{
-                date: '2018-04-19 20:00:00',
-                title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-            }],
-            recycle: [{
-                date: '2018-04-19 20:00:00',
-                title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-            }]
+            tableData1: [],
+            username:'',
+            studentNum:'',
+            college: '',
+
         };
     },
     components: {
         Schart
     },
     computed: {
-        unreadNum(){
-            return this.unread.length;
-        },
-        name(){
+        info_show(){
+            const user_teacher = localStorage.getItem('user');//由工号遍历教师表
+            this.$axios.post('http://123.56.15.233:8000/teacher',user_teacher)
+                .then((res) =>{
+                    if(res.data.success === true){
+                        this.username  = res.data.tname;//遍历到的姓名
 
-                return  localStorage.getItem('user');
+                        this.studentNum = res.data.account ;
+                        this.college = res.data.account ;
+                    }else{
+                        this.$message({
+                            messgage: res.data.error,
+                            type:'error',
+                        });
+                    }
+
+                }).catch((err)=>{
+                this.$message({
+                    message: err +'here!!!',
+                    type: 'warning',
+                });
+                console.log(err);
+            });
+
+              // return  localStorage.getItem('user');
 
         },
-        role() {
-            return localStorage.getItem('status');
+        time_table_show(){
+            this.$axios.get('http://123.56.15.233:8000/records',user_teacher)//要改--仅显示与该教师有关系的学生时间
+                .then((res) => {
+                    if (res.data.success === true) {
+                        this.tableData1 = JSON.parse(res.data.data);
+                        localStorage.setItem('student',JSON.parse(res.data.data));//将学生保存起来
+                    }
+                })
+                .catch((err) => {
+                    this.$message({
+                        message: err,
+                        type: 'warning',
+                    });
+                });
         }
     },
 
+    created(){
+        this.info_show();
+        this.time_table_show();
+    },
 
     // created() {
     //     this.handleListener();
@@ -289,6 +183,22 @@ export default {
 
 
 <style scoped>
+
+    el-table__row>td {
+        border: none;
+    }
+
+    .el-table::before {
+        height: 0px;
+    }
+
+    .studentTable{
+        width: 900px;
+        font-size: 14px;
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-top: 10px;
+    }
 .el-row {
     margin-bottom: 20px;
 }

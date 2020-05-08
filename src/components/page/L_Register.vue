@@ -62,12 +62,39 @@
             register(){
                 this.$refs.register.validate(valid => {
                     if (valid) {
-                        localStorage.setItem('user',this.userparam.username);
-                        localStorage.setItem('tnum',this.userparam.tnum);
-                        localStorage.setItem('pwd',this.userparam.password);
-                        localStorage.setItem('college',this.userparam.college);
-                        this.$message.success('注册成功');
-                        this.$router.push( '/');
+                        // localStorage.setItem('user',this.userparam.username);
+                        // localStorage.setItem('tnum',this.userparam.tnum);
+                        // localStorage.setItem('pwd',this.userparam.password);
+                        // localStorage.setItem('college',this.userparam.college);
+                        const t_data = {
+                            username: this.username,
+                            tnum :this.tnum,
+                            college:this.college,
+                            password: this.password,
+                        };
+                        this.$axios.post('http://123.56.15.233:8000/register', t_data)
+                            .then((res) => {
+                                if (res.data.success === true) {
+                                    this.$message({
+                                        message: '注册成功!',
+                                        type: 'success',
+                                    });
+                                    this.$router.push({ path: '/' });
+                                } else {
+                                    this.$message({
+                                        message: res.data.error,
+                                        type: 'warning',
+                                    });
+                                    console.log(res.data.error);
+                                }
+                            })
+                            .catch((err) => {
+                                this.$message({
+                                    mesage: err,
+                                    type: 'warning',
+                                });
+                                console.log(err);
+                            });
                     };
                 })
 

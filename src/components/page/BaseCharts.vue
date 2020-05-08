@@ -31,6 +31,9 @@
                         ></el-date-picker>
 
                     </el-col>
+                    <el-col :span="2">
+                        <el-button class="button" type="primary" @click="chart_show()">查看</el-button>
+                    </el-col>
                 </div>
             </div>
 
@@ -62,22 +65,53 @@ export default {
                     text: '该时间段内学习情况汇总'
                 },
                 bgColor: '#fbfbfb',
-                labels: ['一', '二', '三', '四', '五'],
+                labels: '',
                 datasets: [
                     {
                         label: '学习时长',
                         fillColor: 'rgba(241, 49, 74, 0.5)',
-                        data: [234, 278, 270, 190, 230]
+                        data: []
                     }
                 ]
             }
-
         };
+    },
+    methods:{
+        chart_show(){
+            const user_teacher = localStorage.getItem('user');//由工号遍历学生表
+            const time = {
+                teacher: user_teacher,
+                begin: this.form.date1,
+                end:   this.form.date2,
+
+            };
+            if(time.end > time.begin && time.end!=''&&time.begin!=''){
+                this.$axios.post('http://123.56.15.233:8000/charts_t', time)
+                    .then((res)=>{
+                        this.options1.labels = localStorage.getItem('student');
+                        this.options1.datasets.data = res.data.data;//
+                       //return res.data.alltime;
+
+                        }
+
+                    ).catch((err)=>{
+
+                    }
+
+                );
+            }else {
+                this.$message.error("请选择正确时间")
+            }
+
+        },
     }
 };
 </script>
 
 <style scoped>
+    .button{
+        margin-left:20px;
+    }
  .line{
 
      margin-left: 40px;

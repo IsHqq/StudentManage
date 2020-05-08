@@ -63,11 +63,11 @@ export default {
                     title: '系统首页'
                 },
 
-                {
-                    icon: 'el-icon-lx-cascades',
-                    index: 'table',
-                    title: '学生信息'
-                },
+                // {
+                //     icon: 'el-icon-lx-cascades',
+                //     index: 'table',
+                //     title: '学生信息'
+                // },
                 {
                     icon: 'el-icon-pie-chart',
                     index: 'charts',
@@ -141,12 +141,8 @@ export default {
                     index: 'DashStudent',
                     title: '系统首页'
                 };
+
                 this.items[1] = {
-                    icon: 'el-icon-lx-cascades',
-                    index: 'Table_S',
-                    title: '本周考勤'
-                };
-                this.items[2] = {
                     icon: 'el-icon-pie-chart',
                     index: 'Scharts',
                     title: '学习统计'
@@ -154,7 +150,6 @@ export default {
 
             }
 
-                //this.effective_date[1] = this.stamptimeToDate(detail.invalid_date);
 
         }
     }

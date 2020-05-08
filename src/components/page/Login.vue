@@ -47,22 +47,44 @@ export default {
     },
     methods: {
         submitForm() {//login为整个表单
-            this.$refs.login.validate(valid => {
-                if (valid && localStorage.getItem('tnum') == this.param.username && localStorage.getItem('pwd') == this.param.password) {
-                    this.$message.success('登录成功');
-                    localStorage.setItem('status', '教师');
-                    this.$router.push('/re');
-                } else if (valid && localStorage.getItem('snum') == this.param.username && localStorage.getItem('spwd') == this.param.password){
+            const data = {
+                username: this.param.username,
+                password: this.param.password,
+            };
+            this.$axios.post('http://123.56.15.233:8000/login', data)
+                .then((res) => {
+                    if (res.data.success === true) {
+                        this.$message({
+                            message: '登录成功!',
+                            type: 'success',
+                        });
+                        localStorage.setItem('token', res.data.token);
+                        localStorage.setItem('user',this.param.username);
+                        if(this.param.username === 'admin'){//根据账号长度区分身份
+                           //localStorage.setItem('status', '教师');
 
-                    this.$message.success('登录成功');
-                    localStorage.setItem('status', '学生');
-                    this.$router.push('/re1');
-               } else {
-                    this.$message.error('账号或密码错误');
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
+                            this.$router.push({ path: '/re' });
+                        }else{
+                          //  localStorage.setItem('status', '学生');
+                            this.$router.push({ path: '/re1' });
+                        }
+
+                    } else {
+                        this.$message({
+                            message: res.data.error,
+                            type: 'error',
+                        });
+                    }
+                })
+                .catch((err) => {
+                    this.$message({
+                        message: err +'here!!!',
+                        type: 'warning',
+                    });
+                    console.log(err);
+                });
+
+
         },
         to_register(){
 

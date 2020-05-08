@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
+import axios from 'axios';
 
 Vue.config.productionTip = false;
 Vue.use(VueI18n);//中英文字符
@@ -20,6 +21,21 @@ const i18n = new VueI18n({
     messages
 });
 
+//拦截器
+axios.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // eslint-disable-next-line no-param-reassign
+            config.headers.Authorization = token;
+        }
+        //this.$message.error('erororo')
+        return config;
+    },
+    (error) => Promise.reject(error),
+);
+
+Vue.prototype.$axios = axios;
 
 new Vue({
     router,
