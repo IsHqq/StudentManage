@@ -47,6 +47,8 @@ export default {
     },
     methods: {
         submitForm() {//login为整个表单
+
+
             const data = {
                 username: this.param.username,
                 password: this.param.password,
