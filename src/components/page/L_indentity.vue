@@ -1,4 +1,4 @@
-<template>
+kanle<template>
     <div class="login-wrap">
         <div class="ms-login">
             <div class="ms-title">新用户注册</div>
