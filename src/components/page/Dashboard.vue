@@ -35,8 +35,8 @@
                             class="studentTable"
                     >
                         <el-table-column v-for="items in tableDataType"
-                                         :prop="items.nameProp"
-                                         :label="items.nameLable"
+                                         :prop="items.prop"
+                                         :label="items.lable"
                                          width="300">
                         </el-table-column>
                     </el-table>
@@ -62,14 +62,14 @@ export default {
            // showHeader: false,
 
             tableDataType: [{
-                nameLable:'序号',
-                nameProp:'id'//要改
+                label:'序号',
+                prop:'date'//要改
             }, {
-                nameLable: '姓名',
-                nameProp: 'name'
+                label: '姓名',
+                prop: 'name'
             }, {
-                nameLable:'今日签到' ,
-                nameProp:'check'
+                lable:'今日签到' ,
+                prop:'remark'
             }],
             tableData1: [],
             username:'',
@@ -80,6 +80,21 @@ export default {
     },
     components: {
         Schart
+    },
+    created() {
+      this.$axios.get('http://123.56.15.233:8000/records')
+        .then((res) => {
+            if (res.data.success === true) {
+                this.tableData1 = JSON.parse(res.data.data);
+            }
+        })
+        .catch((err) => {
+            this.$message({
+                message: err,
+                type: 'warning'
+            });
+        });
+      this.info_show()
     },
     computed: {
         info_show(){
@@ -110,7 +125,7 @@ export default {
 
         },
         time_table_show(){
-            this.$axios.get('http://123.56.15.233:8000/records',user_teacher)//要改--仅显示与该教师有关系的学生时间
+            this.$axios.get('http://123.56.15.233:8000/records')//要改--仅显示与该教师有关系的学生时间
                 .then((res) => {
                     if (res.data.success === true) {
                         this.tableData1 = JSON.parse(res.data.data);
@@ -126,10 +141,10 @@ export default {
         }
     },
 
-    created(){
-        this.info_show();
-        this.time_table_show();
-    },
+    // created(){
+    //     this.info_show();
+    //     this.time_table_show();
+    // },
 
     // created() {
     //     this.handleListener();

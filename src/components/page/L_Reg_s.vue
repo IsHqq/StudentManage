@@ -150,7 +150,7 @@
                             spwd: this.userparam.spwd,
                         };
 
-                        this.$axios.post('http://123.56.15.233:8000/register_s', s_data)
+                        this.$axios.post('http://123.56.15.233:8000/register', s_data)
                             .then((res) => {
                                 if (res.data.success === true) {
                                     this.$message({
