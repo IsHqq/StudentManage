@@ -64,6 +64,7 @@ export default {
             tableDataType: [{
                 label:'序号',
                 prop:'date'//要改
+
             }, {
                 label: '姓名',
                 prop: 'name'
@@ -98,28 +99,32 @@ export default {
     },
     computed: {
         info_show(){
-            const user_teacher = localStorage.getItem('user');//由工号遍历教师表
-            this.$axios.post('http://123.56.15.233:8000/teacher',user_teacher)
-                .then((res) =>{
-                    if(res.data.success === true){
-                        this.username  = res.data.tname;//遍历到的姓名
+           // const user_teacher = localStorage.getItem('user');//由工号遍历教师表
+            this.username  = "admin";//遍历到的姓名
 
-                        this.studentNum = res.data.account ;
-                        this.college = res.data.account ;
-                    }else{
-                        this.$message({
-                            messgage: res.data.error,
-                            type:'error',
-                        });
-                    }
-
-                }).catch((err)=>{
-                this.$message({
-                    message: err +'here!!!',
-                    type: 'warning',
-                });
-                console.log(err);
-            });
+            this.studentNum = 1 ;
+            this.college = "计算机学院";
+            // this.$axios.post('http://123.56.15.233:8000/teacher',user_teacher)
+            //     .then((res) =>{
+            //         if(res.data.success === true){
+            //             this.username  = res.data.tname;//遍历到的姓名
+            //
+            //             this.studentNum = res.data.account ;
+            //             this.college = res.data.account ;
+            //         }else{
+            //             this.$message({
+            //                 messgage: res.data.error,
+            //                 type:'error',
+            //             });
+            //         }
+            //
+            //     }).catch((err)=>{
+            //     this.$message({
+            //         message: err +'here!!!',
+            //         type: 'warning',
+            //     });
+            //     console.log(err);
+            // });
 
               // return  localStorage.getItem('user');
 
@@ -129,7 +134,11 @@ export default {
                 .then((res) => {
                     if (res.data.success === true) {
                         this.tableData1 = JSON.parse(res.data.data);
-                        localStorage.setItem('student',JSON.parse(res.data.data));//将学生保存起来
+                        this.$message({
+                            message: this.tableData1,
+                            type: 'suceess',
+                        })
+                       // localStorage.setItem('student',JSON.parse(res.data.data));//将学生保存起来
                     }
                 })
                 .catch((err) => {
